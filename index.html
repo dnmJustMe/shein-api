@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obtener Precio de Shein</title>
+</head>
+<body>
+    <input type="text" id="urlInput" placeholder="Inserta la URL del artículo">
+    <button onclick="obtenerPrecio()">Obtener Precio</button>
+    <div id="precioContainer"></div>
+
+    <script>
+        // Función para obtener el precio del artículo
+        function obtenerPrecio() {
+            var url_articulo = document.getElementById('urlInput').value;
+            // Hacer la solicitud AJAX a la URL del artículo
+            fetch(url_articulo)
+                .then(response => response.text())
+                .then(html => {
+                    var precio = obtenerPrecioDesdeHTML(html);
+                    // Mostrar el precio en el área de texto
+                    document.getElementById('precioContainer').innerText = "Precio del artículo: " + precio;
+                })
+                .catch(error => {
+                    console.error('Error al obtener el precio:', error);
+                    // Mostrar un mensaje de error en caso de fallo
+                    document.getElementById('precioContainer').innerText = "Error al obtener el precio. Por favor, verifica la URL del artículo.";
+                });
+        }
+
+        // Función para extraer el precio del HTML de Shein
+        function obtenerPrecioDesdeHTML(html) {
+            // Crear un elemento temporal para almacenar el contenido de la respuesta
+            var tempElement = document.createElement('div');
+            tempElement.innerHTML = html;
+            // Encontrar el elemento que contiene el precio
+            var precioElement = tempElement.querySelector('.goods-price__main');
+            // Obtener el precio
+            var precio = precioElement.textContent.trim();
+            return precio;
+        }
+    </script>
+</body>
+</html>
